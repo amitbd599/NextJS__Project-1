@@ -6254,6 +6254,7 @@ textarea.form-control {
 }
 
 .testimony-wrap {
+  margin-top: 20px;
   display: block;
   position: relative;
   background: white;

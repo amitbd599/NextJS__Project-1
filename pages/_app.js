@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/animate.css";
-// import "../styles/fontAwsome.css"
+import "../styles/custom.css";
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;

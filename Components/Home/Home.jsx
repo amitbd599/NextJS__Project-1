@@ -5,17 +5,32 @@ import TrackVisibility from "react-on-screen";
 import CountUp from "react-countup";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Slider from "react-slick";
+import ReactPaginate from "react-paginate";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 const Home = () => {
-  const [data, setData] = useState([]);
+  const BaseURL = "https://product-amitjs.herokuapp.com/api/v1/LoadData";
+  const [row, setRow] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    axios.get("https://fakestoreapi.com/products").then((result) => {
-      console.log(result.data);
-      setData(result.data);
+    axios.get(BaseURL + "/1").then((result) => {
+      setRow(result.data[0]["Row"]);
+      setTotal(result.data[0]["Total"][0]["count"]);
     });
   }, []);
+
+  const handelPageClick = async (event) => {
+    setLoading(true);
+    axios.get(BaseURL + "/" + (event.selected + 1)).then((result) => {
+      setRow(result.data[0]["Row"]);
+      setTotal(result.data[0]["Total"][0]["count"]);
+      setLoading(false);
+    });
+  };
   let settings = {
     dots: true,
     infinite: true,
@@ -298,126 +313,157 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
-            {data.slice(0, 3).map((item, index) => (
+            {row.slice(0, 3).map((item, index) => (
               <div key={index} className='col-md-6 col-lg-4 d-flex'>
-                <div className='book-wrap d-lg-flex'>
-                  <div
-                    className='img d-flex justify-content-end'
-                    style={{
-                      backgroundImage: `url("${item?.image}")`,
-                    }}
-                  >
-                    <div className='in-text'>
-                      <a
-                        href='#'
-                        className='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Add to cart'
-                      >
-                        <span className='flaticon-shopping-cart'></span>
-                      </a>
-                      <a
-                        href='#'
-                        className='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Add to Wishlist'
-                      >
-                        <span className='flaticon-heart-1'></span>
-                      </a>
-                      <a
-                        href='#'
-                        className='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Quick View'
-                      >
-                        <span className='flaticon-search'></span>
-                      </a>
-                      <a
-                        href='#'
-                        className='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Compare'
-                      >
-                        <span className='flaticon-visibility'></span>
-                      </a>
+                {loading === false ? (
+                  <div className='book-wrap d-lg-flex'>
+                    <div
+                      className='img d-flex justify-content-end'
+                      style={{
+                        backgroundImage: `url("${item?.image}")`,
+                      }}
+                    >
+                      <div className='in-text'>
+                        <a
+                          href='#'
+                          className='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Add to cart'
+                        >
+                          <span className='flaticon-shopping-cart'></span>
+                        </a>
+                        <a
+                          href='#'
+                          className='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Add to Wishlist'
+                        >
+                          <span className='flaticon-heart-1'></span>
+                        </a>
+                        <a
+                          href='#'
+                          className='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Quick View'
+                        >
+                          <span className='flaticon-search'></span>
+                        </a>
+                        <a
+                          href='#'
+                          className='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Compare'
+                        >
+                          <span className='flaticon-visibility'></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div className='text p-4'>
+                      <p className='mb-2'>
+                        <span className='price'>$ {item?.price}</span>
+                      </p>
+                      <h2>
+                        <a href='#'>{item?.title}</a>
+                      </h2>
+                      <span className='position'>{item?.category}</span>
                     </div>
                   </div>
-                  <div className='text p-4'>
-                    <p className='mb-2'>
-                      <span className='price'>$ {item?.price}</span>
-                    </p>
-                    <h2>
-                      <a href='#'>{item?.title}</a>
-                    </h2>
-                    <span className='position'>{item?.category}</span>
+                ) : (
+                  <div className='Skeleton'>
+                    <Skeleton count={13} />
                   </div>
-                </div>
+                )}
               </div>
             ))}
-            {data.slice(3, 6).map((item, index) => (
+            {row.slice(3, 6).map((item, index) => (
               <div key={index} class='col-md-6 col-lg-4 d-flex'>
-                <div class='book-wrap d-lg-flex'>
-                  <div
-                    class='img d-flex justify-content-end'
-                    style={{
-                      backgroundImage: `url("${item?.image}")`,
-                    }}
-                  >
-                    <div class='in-text'>
-                      <a
-                        href='#'
-                        class='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Add to cart'
-                      >
-                        <span class='flaticon-shopping-cart'></span>
-                      </a>
-                      <a
-                        href='#'
-                        class='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Add to Wishlist'
-                      >
-                        <span class='flaticon-heart-1'></span>
-                      </a>
-                      <a
-                        href='#'
-                        class='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Quick View'
-                      >
-                        <span class='flaticon-search'></span>
-                      </a>
-                      <a
-                        href='#'
-                        class='icon d-flex align-items-center justify-content-center'
-                        data-toggle='tooltip'
-                        data-placement='left'
-                        title='Compare'
-                      >
-                        <span class='flaticon-visibility'></span>
-                      </a>
+                {loading === false ? (
+                  <div class='book-wrap d-lg-flex'>
+                    <div
+                      class='img d-flex justify-content-end'
+                      style={{
+                        backgroundImage: `url("${item?.image}")`,
+                      }}
+                    >
+                      <div class='in-text'>
+                        <a
+                          href='#'
+                          class='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Add to cart'
+                        >
+                          <span class='flaticon-shopping-cart'></span>
+                        </a>
+                        <a
+                          href='#'
+                          class='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Add to Wishlist'
+                        >
+                          <span class='flaticon-heart-1'></span>
+                        </a>
+                        <a
+                          href='#'
+                          class='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Quick View'
+                        >
+                          <span class='flaticon-search'></span>
+                        </a>
+                        <a
+                          href='#'
+                          class='icon d-flex align-items-center justify-content-center'
+                          data-toggle='tooltip'
+                          data-placement='left'
+                          title='Compare'
+                        >
+                          <span class='flaticon-visibility'></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class='text p-4 order-md-first'>
+                      <p class='mb-2'>
+                        <span class='price'>$9.00</span>
+                      </p>
+                      <h2>
+                        <a href='#'>All The Letters I Should Have Sent</a>
+                      </h2>
+                      <span class='position'>By John Nathan Muller</span>
                     </div>
                   </div>
-                  <div class='text p-4 order-md-first'>
-                    <p class='mb-2'>
-                      <span class='price'>$9.00</span>
-                    </p>
-                    <h2>
-                      <a href='#'>All The Letters I Should Have Sent</a>
-                    </h2>
-                    <span class='position'>By John Nathan Muller</span>
+                ) : (
+                  <div className='Skeleton mt-4'>
+                    <Skeleton count={13} />
                   </div>
-                </div>
+                )}
               </div>
             ))}
+          </div>
+
+          <div className='row'>
+            <div className='col'>
+              <div className='pagination'>
+                <ReactPaginate
+                  className=''
+                  previousLabel='<'
+                  nextLabel='>'
+                  breakLabel='. . .'
+                  pageCount={total / 6}
+                  pageRangeDisplayed={3}
+                  renderOnZeroPageCount={null}
+                  activeClassName='active   bg-[#A855F7] rounded-full'
+                  onPageChange={handelPageClick}
+                  type='button'
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

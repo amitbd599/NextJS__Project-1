@@ -6939,3 +6939,27 @@ textarea.form-control {
     stroke-dashoffset: -136px;
   }
 }
+.Skeleton {
+  width: 100%;
+}
+
+.pagination {
+  justify-content: center;
+}
+.pagination ul {
+  display: flex;
+  list-style: none;
+}
+.pagination ul li {
+  background: rgba(221, 221, 221, 0.589);
+  margin: 0 2px;
+  border-radius: 3px;
+}
+.pagination ul li a {
+  display: block;
+  padding: 2px 14px;
+}
+.pagination .active {
+  background-color: #95adbe;
+  color: #fff;
+}

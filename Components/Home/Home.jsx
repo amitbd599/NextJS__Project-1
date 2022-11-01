@@ -339,7 +339,7 @@ const Home = () => {
           </div>
           <div className='row'>
             {row.slice(0, 3).map((item, index) => (
-              <div key={index} className='col-md-6 col-lg-4 d-flex'>
+              <div key={index} className='col-md-6 col-lg-4 d-flex mt-3'>
                 {loading === false ? (
                   <div className='book-wrap d-lg-flex'>
                     <div
@@ -399,13 +399,13 @@ const Home = () => {
                   </div>
                 ) : (
                   <div className='Skeleton'>
-                    <Skeleton count={13} />
+                    <Skeleton count={12} />
                   </div>
                 )}
               </div>
             ))}
             {row.slice(3, 6).map((item, index) => (
-              <div key={index} class='col-md-6 col-lg-4 d-flex'>
+              <div key={index} class='col-md-6 col-lg-4 d-flex mt-3'>
                 {loading === false ? (
                   <div class='book-wrap d-lg-flex'>
                     <div
@@ -464,8 +464,8 @@ const Home = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className='Skeleton mt-4'>
-                    <Skeleton count={13} />
+                  <div className='Skeleton '>
+                    <Skeleton count={12} />
                   </div>
                 )}
               </div>

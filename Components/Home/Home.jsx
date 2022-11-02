@@ -12,25 +12,166 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 const Home = () => {
-  const BaseURL = "https://product-amitjs.herokuapp.com/api/v1/LoadData";
-  const [row, setRow] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
+  const itemPerPage = 6;
+  const pageCount = Math.ceil(data.length / itemPerPage);
+  const pageInit = pageNumber * itemPerPage;
   useEffect(() => {
-    axios.get(BaseURL + "/1").then((result) => {
-      setRow(result.data[0]["Row"]);
-      setTotal(result.data[0]["Total"][0]["count"]);
+    axios.get("https://fakestoreapi.com/products").then((result) => {
+      setData(result.data);
     });
   }, []);
 
-  const handelPageClick = async (event) => {
+  const handelPageClick = async ({ selected }) => {
     setLoading(true);
-    axios.get(BaseURL + "/" + (event.selected + 1)).then((result) => {
-      setRow(result.data[0]["Row"]);
-      setTotal(result.data[0]["Total"][0]["count"]);
+    setPageNumber(selected);
+    setTimeout(() => {
       setLoading(false);
-    });
+    }, 1000);
   };
+  const dataShapeOne = data
+    .slice(pageInit, pageInit + itemPerPage)
+    .map((item, index) => {
+      return (
+        <div key={index} class='col-md-6 col-lg-4 d-flex mt-3'>
+          {loading === false ? (
+            <div className='book-wrap d-lg-flex'>
+              <div
+                className='img d-flex justify-content-end'
+                style={{
+                  backgroundImage: `url("${item?.image}")`,
+                }}
+              >
+                <div className='in-text'>
+                  <a
+                    href='#'
+                    className='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Add to cart'
+                  >
+                    <span className='flaticon-shopping-cart'></span>
+                  </a>
+                  <a
+                    href='#'
+                    className='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Add to Wishlist'
+                  >
+                    <span className='flaticon-heart-1'></span>
+                  </a>
+                  <a
+                    href='#'
+                    className='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Quick View'
+                  >
+                    <span className='flaticon-search'></span>
+                  </a>
+                  <a
+                    href='#'
+                    className='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Compare'
+                  >
+                    <span className='flaticon-visibility'></span>
+                  </a>
+                </div>
+              </div>
+              <div className='text p-4'>
+                <p className='mb-2'>
+                  <span className='price'>$ {item?.price}</span>
+                </p>
+                <h2>
+                  <a href='#'>{item?.title}</a>
+                </h2>
+                <span className='position'>{item?.category}</span>
+              </div>
+            </div>
+          ) : (
+            <div className='Skeleton'>
+              <Skeleton count={12} />
+            </div>
+          )}
+        </div>
+      );
+    });
+  const dataShapeTwo = data
+    .slice(pageInit, pageInit + itemPerPage)
+    .map((item, index) => {
+      return (
+        <div key={index} class='col-md-6 col-lg-4 d-flex mt-3'>
+          {loading === false ? (
+            <div class='book-wrap d-lg-flex'>
+              <div
+                class='img d-flex justify-content-end'
+                style={{
+                  backgroundImage: `url("${item?.image}")`,
+                }}
+              >
+                <div class='in-text'>
+                  <a
+                    href='#'
+                    class='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Add to cart'
+                  >
+                    <span class='flaticon-shopping-cart'></span>
+                  </a>
+                  <a
+                    href='#'
+                    class='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Add to Wishlist'
+                  >
+                    <span class='flaticon-heart-1'></span>
+                  </a>
+                  <a
+                    href='#'
+                    class='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Quick View'
+                  >
+                    <span class='flaticon-search'></span>
+                  </a>
+                  <a
+                    href='#'
+                    class='icon d-flex align-items-center justify-content-center'
+                    data-toggle='tooltip'
+                    data-placement='left'
+                    title='Compare'
+                  >
+                    <span class='flaticon-visibility'></span>
+                  </a>
+                </div>
+              </div>
+              <div class='text p-4 order-md-first'>
+                <p class='mb-2'>
+                  <span className='price'>$ {item?.price}</span>
+                </p>
+                <h2>
+                  <a href='#'>{item?.title}</a>
+                </h2>
+                <span className='position'>{item?.category}</span>
+              </div>
+            </div>
+          ) : (
+            <div className='Skeleton mt-4'>
+              <Skeleton count={11} />
+            </div>
+          )}
+        </div>
+      );
+    });
+
   let settings = {
     dots: true,
     infinite: true,
@@ -338,138 +479,8 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
-            {row.slice(0, 3).map((item, index) => (
-              <div key={index} className='col-md-6 col-lg-4 d-flex mt-3'>
-                {loading === false ? (
-                  <div className='book-wrap d-lg-flex'>
-                    <div
-                      className='img d-flex justify-content-end'
-                      style={{
-                        backgroundImage: `url("${item?.image}")`,
-                      }}
-                    >
-                      <div className='in-text'>
-                        <a
-                          href='#'
-                          className='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Add to cart'
-                        >
-                          <span className='flaticon-shopping-cart'></span>
-                        </a>
-                        <a
-                          href='#'
-                          className='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Add to Wishlist'
-                        >
-                          <span className='flaticon-heart-1'></span>
-                        </a>
-                        <a
-                          href='#'
-                          className='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Quick View'
-                        >
-                          <span className='flaticon-search'></span>
-                        </a>
-                        <a
-                          href='#'
-                          className='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Compare'
-                        >
-                          <span className='flaticon-visibility'></span>
-                        </a>
-                      </div>
-                    </div>
-                    <div className='text p-4'>
-                      <p className='mb-2'>
-                        <span className='price'>$ {item?.price}</span>
-                      </p>
-                      <h2>
-                        <a href='#'>{item?.title}</a>
-                      </h2>
-                      <span className='position'>{item?.category}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className='Skeleton'>
-                    <Skeleton count={12} />
-                  </div>
-                )}
-              </div>
-            ))}
-            {row.slice(3, 6).map((item, index) => (
-              <div key={index} class='col-md-6 col-lg-4 d-flex mt-3'>
-                {loading === false ? (
-                  <div class='book-wrap d-lg-flex'>
-                    <div
-                      class='img d-flex justify-content-end'
-                      style={{
-                        backgroundImage: `url("${item?.image}")`,
-                      }}
-                    >
-                      <div class='in-text'>
-                        <a
-                          href='#'
-                          class='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Add to cart'
-                        >
-                          <span class='flaticon-shopping-cart'></span>
-                        </a>
-                        <a
-                          href='#'
-                          class='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Add to Wishlist'
-                        >
-                          <span class='flaticon-heart-1'></span>
-                        </a>
-                        <a
-                          href='#'
-                          class='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Quick View'
-                        >
-                          <span class='flaticon-search'></span>
-                        </a>
-                        <a
-                          href='#'
-                          class='icon d-flex align-items-center justify-content-center'
-                          data-toggle='tooltip'
-                          data-placement='left'
-                          title='Compare'
-                        >
-                          <span class='flaticon-visibility'></span>
-                        </a>
-                      </div>
-                    </div>
-                    <div class='text p-4 order-md-first'>
-                      <p class='mb-2'>
-                        <span class='price'>$9.00</span>
-                      </p>
-                      <h2>
-                        <a href='#'>All The Letters I Should Have Sent</a>
-                      </h2>
-                      <span class='position'>By John Nathan Muller</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className='Skeleton '>
-                    <Skeleton count={12} />
-                  </div>
-                )}
-              </div>
-            ))}
+            {dataShapeOne.slice(0, 3)}
+            {dataShapeTwo.slice(3, 6)}
           </div>
 
           <div className='row'>
@@ -480,7 +491,7 @@ const Home = () => {
                   previousLabel='<'
                   nextLabel='>'
                   breakLabel='. . .'
-                  pageCount={total / 6}
+                  pageCount={pageCount}
                   pageRangeDisplayed={3}
                   renderOnZeroPageCount={null}
                   activeClassName='active   bg-[#A855F7] rounded-full'
